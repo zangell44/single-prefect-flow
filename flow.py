@@ -10,6 +10,6 @@ def say_hello(name):
         logger.info('Hi' + name)
 
 with Flow('my-hello-flow') as flow:
-        say_hello('Zach')
+        say_hello('Marvin')
 
 flow.storage = storage
