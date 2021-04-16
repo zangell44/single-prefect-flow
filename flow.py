@@ -2,7 +2,7 @@ import prefect
 from prefect import task, Flow
 from prefect.storage import GitRepo
 
-storage = GitRepo(file_path='flow.py', git_url='https://github.com/zangell44/single-prefect-flow.git')
+storage = GitRepo(flow_path='flow.py', username='zangell44', repo_name='single-prefect-flow')
 
 @task
 def say_hello(name):
