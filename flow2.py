@@ -14,5 +14,5 @@ storage = Git(
     #branch_name="my/branch-name",
     use_ssh=True,
 )
-storage.add_flow(flow) # the Flow object
-storage.get_flow(flow.name) # try to load the flow from git storag
+#storage.add_flow(flow) # the Flow object
+#storage.get_flow(flow.name) # try to load the flow from git storag
