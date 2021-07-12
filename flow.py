@@ -11,7 +11,10 @@ storage = Git(flow_path='flow.py', repo='zangell44/single-prefect-flow')
 # is being cloned into a temporary directory when loaded
 # from storage
 # file_path = Path(__file__).resolve().parent
-file_path = inspect.getfile(lambda: None)
+try:
+        file_path = inspect.getfile(lambda: None)
+except:
+        breakpoint()
 
 # load the file
 with open(file_path + '/test.txt', 'r') as my_file:
