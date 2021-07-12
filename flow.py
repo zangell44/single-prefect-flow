@@ -1,8 +1,20 @@
 import prefect
 from prefect import task, Flow
 from prefect.storage import Git
+from pathlib import Path
 
-storage = Git(flow_path='flow.py', repo='zangell44/single-prefect-flow',  git_token_secret_name="SUPAH_SECRET_GH_TOKEN")
+storage = Git(flow_path='flow.py', repo='zangell44/single-prefect-flow')
+
+# get the path to my txt file
+# this is tricky because my flow file
+# is being cloned into a temporary directory when loaded
+# from storage
+file_path = Path(__file__).resolve().parent
+
+# load the file
+with open(file_path + '/test.txt', 'r') as my_file:
+        name = my_file.read()
+
 
 @task
 def say_hello(name):
@@ -10,6 +22,6 @@ def say_hello(name):
         logger.info('Hi' + name)
 
 with Flow('my-hello-flow') as flow:
-        say_hello('Zach2')
+        say_hello(name)
 
 flow.storage = storage
