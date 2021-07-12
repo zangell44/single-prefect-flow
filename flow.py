@@ -2,6 +2,7 @@ import prefect
 from prefect import task, Flow
 from prefect.storage import Git
 from pathlib import Path
+import inspect
 
 storage = Git(flow_path='flow.py', repo='zangell44/single-prefect-flow')
 
@@ -9,7 +10,8 @@ storage = Git(flow_path='flow.py', repo='zangell44/single-prefect-flow')
 # this is tricky because my flow file
 # is being cloned into a temporary directory when loaded
 # from storage
-file_path = Path(__file__).resolve().parent
+# file_path = Path(__file__).resolve().parent
+file_path = inspect.getfile(lambda: None)
 
 # load the file
 with open(file_path + '/test.txt', 'r') as my_file:
