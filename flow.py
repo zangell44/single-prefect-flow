@@ -11,6 +11,7 @@ def fetch_model(dsn_params) -> Tuple[str, str]:
     return 'test', '123'
 
 
+@task
 def build_dsn_params(dbname, application_name):
     return pg_db
 
@@ -34,6 +35,6 @@ with Flow(
     )
     model_id, model = fetch_model(dsn_params("fetch_model"))
 
-flow.storage = Git(flow_path='flow.py', repo='zangell44/single-prefect-flow')
+flow.storage = Git(flow_path='flow.py', repo='zangell44/single-prefect-flow', stored_as_script=False)
 
 flow.register('test')
