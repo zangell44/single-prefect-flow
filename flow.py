@@ -1,21 +1,39 @@
-import prefect
-from prefect import task, Flow, Parameter
+from prefect import task, Parameter, Flow
+from os import getenv
+from typing import Tuple
 from prefect.storage import Git
 
-#storage = Git(flow_path='flow.py', repo='zangell44/single-prefect-flow', git_token_secret_name="SUPAH_SECRET_GH_TOKEN") # commit='4854091758c9ca28766a60abeae88e66be0e9b63')
-storage = Git(flow_path='flow.py', repo='zangell44/single-prefect-flow')
+pg_db = Parameter("LOGARY_PG_DB", default=getenv("LOGARY_PG_DB", default="analytics"))
+@task(nout=2)
+def fetch_model(dsn_params) -> Tuple[str, str]:
+    # m = _fetch_model(dsn_params)
+    # return m.id, m
+    return 'test', '123'
 
-#name = 'foo'
 
-@task
-def say_hello(name):
-	logger = prefect.context.get("logger")
-	logger.info('Hi' + name)
-	
-with Flow('my-hello-flow') as flow:
-	name = Parameter(name="name", default='Zach')
-	say_hello(name)
+def build_dsn_params(dbname, application_name):
+    return pg_db
 
-flow.storage = storage
+with Flow(
+    "missing_uuid",
+    # state_handlers=[print_state_callback],
+) as flow:
+    # https://deepnote.com/project/Media-Mix-Model-5xns-00xTG6nRlUK1f9DfA/%2Ftest_preprocessing.ipynb
+
+    #
+    ########### CONFIG #######
+
+    dsn_params = lambda name: build_dsn_params(
+        # user=pg_user,
+        # password=pg_password,
+        # host=pg_host,
+        # port=pg_port,
+        dbname=pg_db,
+        # sslmode=pg_sslmode,
+        application_name=f"mmm/{name}",
+    )
+    model_id, model = fetch_model(dsn_params("fetch_model"))
+
+flow.storage = Git(flow_path='flow.py', repo='zangell44/single-prefect-flow')
+
 flow.register('test')
-#flow.run()
